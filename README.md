@@ -241,11 +241,26 @@ to delete the topic and recreate it.
 
 ## Notes
 
-- Use the **UP ARROW** and **DOWN ARROW** in the terminal to scroll through past commands.
-- Use `CTRL+f` to find (and replace) text within a file.
-- You do not need to add to or modify `tests/`. They are provided for example only.
-- Many files are silent helpers. Explore as you like, but nothing is required.
-- You do NOT not to understand everything; understanding builds naturally over time.
+## Phase 04/05 changes
+
+- **Custom live visualization module**:
+
+  - added [src/streaming/visualizations/live_visualizations_chastain.py]
+  - (src/streaming/visualizations/live_visualizations_chastain.py)
+  - x-axis now shows `region_id`,
+- points are colored per-region using the `tab10` colormap, tick labels are rotated,
+- and a legend maps colors → regions.
+- **Consumer integration**:
+- the consumer now imports the custom visualization module in
+- [src/streaming/kafka_consumer_chastain.py](src/streaming/kafka_consumer_chastain.py)
+- and the `x_values` type hints were updated to `list[str]` to
+- match region labels.
+- **Visualization TODOs**: added guidance comments inside
+- `live_visualizations_chastain.py` for future improvements
+- (timestamps, categorical options, API to switch x-axis mode, tests).
+- **Compatibility**:
+- the producer (`src/streaming/kafka_producer_case.py`) continues to send
+- `region_id` in messages and remains compatible with the updated consumer.
 
 ## Troubleshooting >>> or
 
