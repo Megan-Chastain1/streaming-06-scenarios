@@ -23,55 +23,41 @@ to get these projects running on your machine.
 
 ### Dataset
 
-Describe the dataset used by your Kafka producer.
-
-Include:
-
-- the name of the dataset file
-- what kind of records it contains
-- which fields are included in each record
-- whether you used the original sales dataset or modified it
+- The data file is a sales CSV.
+- It is unmodified.
+- It contains information about different sale interactions.
 
 ### Kafka Messages
 
-Describe the messages sent through Kafka.
-
-Include:
-
-- what your producer sends
-- which Kafka topic you used
-- what message key you used, if any
-- whether you changed the message fields
+- I used the streaming-06-scenarios-case topic.
+- The producer sent messages that included:
+  - quantity
+  - item
+  - cost amount
 
 ### Consumer Processing
 
-Describe what your consumer receives and does with each message.
-
-Include:
-
-- what your consumer receives from Kafka
-- how many messages it consumes
-- what it logs or prints
-- if it writes records to a CSV file
-- if it processes or filters selected fields (be specific)
+- The consumer receives messages from the producer
+- There is an analysis step where the following are computed:
+  - total sales with tax
+  - Average spent
+  - minimum cost
+  - maximum cost
 
 ### Experiments
 
-Describe the small technical changes you made.
-
-Include at least one Phase 4 change and one Phase 5 application.
+- I changed what the chart shows on the x-axis.
+- I wanted to see total sales per region
+- I also changed the graph from a line to a bar.
+- I also changed the max messages to 1000 to see more data
 
 ### Results
 
-Describe what happened when you ran the producer and consumer.
+![Sales Total by Region](../images/sales_total_by_region.png)
 
 ### Interpretation
 
-Explain what the Kafka streaming workflow showed you.
-
-Include:
-
-- what changed from the original example
-- what you learned from watching messages move through Kafka
-- what the stream could tell a business or organization
-- what business intelligence was gained from the consumed messages
+- This code is versatile.
+- It can be used to view a lot of different analytics
+- My project shows how much each region is spending
+- This can be used to identify markets that need more advertisement.

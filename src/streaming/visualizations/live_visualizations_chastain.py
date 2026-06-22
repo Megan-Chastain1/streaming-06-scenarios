@@ -11,13 +11,6 @@ Date: 2026-06
 
 """
 
-# TODOs:
-# - Change x-axis to show region names instead of message offset.
-# - Provide option to use timestamps for x-axis and format ticks.
-# - Support categorical x-axis (e.g., order_id) with rotated ticks.
-# - Expose x-axis mode via parameter in update_live_chart to switch modes.
-# - Add unit tests for visualization helpers if needed.
-
 
 # === DECLARE IMPORTS ===
 
@@ -116,39 +109,46 @@ def update_live_chart(
     # Use the region identifier from the message as the x-axis value
     # and as the key for the color mapping.
     region_label = str(message.get("region_id", "unknown"))
-    x_values.append(region_label)
 
-    # Determine color for this region. Use a qualitative colormap
-    # (tab10) and assign colors deterministically as new regions appear.
-    cmap = plt.get_cmap("tab10")
-    region_map = getattr(axis, "_region_color_map", {})
-    if region_label in region_map:
-        color = region_map[region_label]
+    # Create a new y value from the "total" field in the message,
+    # which contains the sale total for that message.
+    new_y = float(message["total"])
+
+    # Check if region already exists in x_values
+    if region_label in x_values:
+        # Find the index of the existing region and add to its total
+        region_idx = x_values.index(region_label)
+        y_values[region_idx] += new_y
     else:
+        # Add new region
+        x_values.append(region_label)
+        y_values.append(new_y)
+
+        # Determine color for this region. Use a qualitative colormap
+        # (tab10) and assign colors deterministically as new regions appear.
+        cmap = plt.get_cmap("tab10")
+        region_map = getattr(axis, "_region_color_map", {})
         idx = len(region_map) % cmap.N
         color = cmap(idx)
         region_map[region_label] = color
         axis._region_color_map = region_map
 
-    # Track point color for each appended y value.
-    axis._point_colors.append(color)
-
-    # Create a new y value from the "total" field in the message,
-    # which contains the sale total for that message.
-    new_y = float(message["total"])
-    y_values.append(new_y)
+        # Track point color for each region.
+        axis._point_colors.append(color)
 
     # Clear the axis
     axis.clear()
 
-    # Re-plot the updated x and y values as a line chart with markers.
-    # When x-values are categorical (region strings), matplotlib will
-    # render them as categorical tick labels.
-    # Plot using numeric x positions so we can color each point. Use
-    # a line between points and overlay a scatter with per-point colors.
+    # Re-plot the updated x and y values as a bar chart with colored bars.
     x_pos = list(range(len(x_values)))
-    axis.plot(x_pos, y_values, marker="o", color="gray", linewidth=1, alpha=0.6)
-    axis.scatter(x_pos, y_values, c=axis._point_colors, edgecolors="k", zorder=3)
+    axis.bar(
+        x_pos,
+        y_values,
+        color=axis._point_colors,
+        edgecolor="k",
+        alpha=0.8,
+        width=0.6,
+    )
 
     # Show the original region labels on the x-axis.
     axis.set_xticks(x_pos)
