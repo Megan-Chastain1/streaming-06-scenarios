@@ -244,23 +244,24 @@ to delete the topic and recreate it.
 ## Phase 04/05 changes
 
 - **Custom live visualization module**:
-
   - added [src/streaming/visualizations/live_visualizations_chastain.py]
-  - (src/streaming/visualizations/live_visualizations_chastain.py)
-  - x-axis now shows `region_id`,
-- points are colored per-region using the `tab10` colormap, tick labels are rotated,
-- and a legend maps colors → regions.
+  - x-axis now shows `region_id`
+  - points are colored per-region using the `tab10` colormap
+  - tick labels are rotated for readability
+  - a legend maps colors → regions
+- **Latest chart update**:
+  - repeated sales for the same region now combine into one bar
+  - the bar height increases as same-region totals accumulate
 - **Consumer integration**:
-- the consumer now imports the custom visualization module in
-- [src/streaming/kafka_consumer_chastain.py](src/streaming/kafka_consumer_chastain.py)
-- and the `x_values` type hints were updated to `list[str]` to
-- match region labels.
-- **Visualization TODOs**: added guidance comments inside
-- `live_visualizations_chastain.py` for future improvements
-- (timestamps, categorical options, API to switch x-axis mode, tests).
+  - the consumer imports the custom visualization module in
+    [src/streaming/kafka_consumer_chastain.py]
+  - `x_values` type hints were updated to `list[str]` to match region labels
+- **Visualization TODOs**:
+  - added guidance comments inside `live_visualizations_chastain.py`
+  - future improvements: timestamps, categorical options, switchable x-axis mode
 - **Compatibility**:
-- the producer (`src/streaming/kafka_producer_case.py`) continues to send
-- `region_id` in messages and remains compatible with the updated consumer.
+  - the producer (`src/streaming/kafka_producer_case.py`) still sends `region_id`
+  - the updated consumer remains compatible with the existing producer message format
 
 ## Troubleshooting >>> or
 
